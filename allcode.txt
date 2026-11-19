@@ -1,0 +1,1553 @@
+
+import React, { useState } from 'react';
+import { View, StyleSheet, Alert, SafeAreaView, StatusBar } from 'react-native';
+
+import { COLORS } from './src/theme';
+import { CoffeeProduct } from './src/data';
+import Header from './src/components/Header';
+import BottomNav from './src/components/BottomNav';
+import Login from './src/components/Login';
+
+import Home from './src/screens/Home';
+import Catalog from './src/screens/Catalog';
+import Cart, { CartItem } from './src/screens/Cart';
+import Profile from './src/screens/Profile';
+import Details from './src/screens/Details';
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('Главная');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<CoffeeProduct | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const addToCart = (product: CoffeeProduct) => {
+    setCart((old) => {
+      const found = old.find((item) => item.product.id === product.id);
+
+      if (found) {
+        return old.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+
+      return [...old, { product, quantity: 1 }];
+    });
+
+    Alert.alert('Добавлено', `${product.name} добавлен в корзину`);
+  };
+
+  const changeQuantity = (id: number, amount: number) => {
+    setCart((old) =>
+      old
+        .map((item) =>
+          item.product.id === id
+            ? { ...item, quantity: item.quantity + amount }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const checkout = () => {
+    if (!cart.length) {
+      Alert.alert('Корзина пуста');
+      return;
+    }
+
+    Alert.alert('Заказ принят!', 'Спасибо за ваш заказ.');
+    setCart([]);
+    setActiveTab('Главная');
+  };
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const renderScreen = () => {
+    if (showLogin) {
+      return (
+        <Login
+          onBack={() => setShowLogin(false)}
+          onLogin={(userEmail) => {
+            setEmail(userEmail);
+            setShowLogin(false);
+            setActiveTab('Профиль');
+          }}
+        />
+      );
+    }
+
+    if (selectedProduct) {
+      return (
+        <Details
+          product={selectedProduct}
+          onBack={() => setSelectedProduct(null)}
+          onAdd={() => addToCart(selectedProduct)}
+        />
+      );
+    }
+
+    switch (activeTab) {
+      case 'Каталог':
+        return (
+          <Catalog
+            onAdd={addToCart}
+            onSelect={setSelectedProduct}
+          />
+        );
+
+      case 'Корзина':
+        return (
+          <Cart
+            cart={cart}
+            onChange={changeQuantity}
+            onCheckout={checkout}
+          />
+        );
+
+      case 'Профиль':
+        return (
+          <Profile
+            email={email}
+            onLogin={() => setShowLogin(true)}
+            onLogout={() => setEmail('')}
+          />
+        );
+
+      default:
+        return (
+          <Home
+            onAdd={addToCart}
+            onSelect={setSelectedProduct}
+            onCatalog={() => setActiveTab('Каталог')}
+          />
+        );
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="dark-content" />
+
+      {!showLogin && !selectedProduct && (
+        <Header
+          cartCount={cartCount}
+          onCartPress={() => setActiveTab('Корзина')}
+        />
+      )}
+
+      <View style={styles.content}>
+        {renderScreen()}
+      </View>
+
+      {!showLogin && !selectedProduct && (
+        <BottomNav
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          cartCount={cartCount}
+        />
+      )}
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 18,
+  },
+});
+
+import React, { useState } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { products, CoffeeProduct } from '../data';
+import ProductCard from '../components/ProductCard';
+import { COLORS } from '../theme';
+
+type Props = {
+  onAdd: (product: CoffeeProduct) => void;
+  onSelect: (product: CoffeeProduct) => void;
+};
+
+export default function Catalog({ onAdd, onSelect }: Props) {
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('Все');
+
+  const categories = ['Все', 'Кофе', 'Десерты', 'Холодный кофе'];
+
+  const filtered = products.filter((p) =>
+    (category === 'Все' || p.category === category) &&
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Наше меню</Text>
+      <Text style={styles.subtitle}>Найдите свой любимый вкус</Text>
+
+      <TextInput
+        style={styles.search}
+        placeholder="Поиск кофе и десертов..."
+        placeholderTextColor={COLORS.gray}
+        value={search}
+        onChangeText={setSearch}
+      />
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {categories.map((item) => (
+          <Text
+            key={item}
+            onPress={() => setCategory(item)}
+            style={[
+              styles.category,
+              category === item && styles.activeCategory,
+            ]}
+          >
+            {item}
+          </Text>
+        ))}
+      </ScrollView>
+
+      <View style={styles.grid}>
+        {filtered.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onPress={() => onSelect(product)}
+            onAdd={() => onAdd(product)}
+          />
+        ))}
+      </View>
+
+      {filtered.length === 0 && (
+        <Text style={styles.empty}>Товары не найдены</Text>
+      )}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  title: {
+    color: COLORS.dark,
+    fontSize: 27,
+    fontWeight: 'bold',
+    marginTop: 15,
+  },
+  subtitle: {
+    color: COLORS.gray,
+    marginTop: 5,
+    marginBottom: 20,
+  },
+  search: {
+    height: 50,
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    color: COLORS.dark,
+    marginBottom: 17,
+  },
+  category: {
+  backgroundColor: COLORS.white,
+  color: COLORS.brown,
+  paddingHorizontal: 17,
+  paddingVertical: 11,
+  borderRadius: 20,
+  marginRight: 9,
+  fontSize: 12,
+},
+activeCategory: {
+  backgroundColor: COLORS.brown,
+  color: COLORS.white,
+},
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  empty: {
+    color: COLORS.gray,
+    textAlign: 'center',
+    marginTop: 40,
+  },
+});
+
+import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { CoffeeProduct } from '../data';
+import { COLORS } from '../theme';
+
+export type CartItem = {
+  product: CoffeeProduct;
+  quantity: number;
+};
+
+type Props = {
+  cart: CartItem[];
+  onChange: (id: number, amount: number) => void;
+  onCheckout: () => void;
+};
+
+export default function Cart({ cart, onChange, onCheckout }: Props) {
+  const total = cart.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Корзина</Text>
+      <Text style={styles.subtitle}>Ваш заказ</Text>
+
+      {cart.length === 0 ? (
+        <View style={styles.empty}>
+          <Text style={styles.emptyIcon}>🛍</Text>
+          <Text style={styles.emptyTitle}>Пока здесь пусто</Text>
+          <Text style={styles.emptyText}>
+            Добавьте что-нибудь вкусное из каталога.
+          </Text>
+        </View>
+      ) : (
+        <>
+          {cart.map((item) => (
+            <View style={styles.item} key={item.product.id}>
+              <Text style={styles.emoji}>☕</Text>
+              <View style={styles.itemInfo}>
+                <Text style={styles.name}>{item.product.name}</Text>
+                <Text style={styles.price}>
+                  {item.product.price.toLocaleString('ru-RU')} ₸
+                </Text>
+                <View style={styles.controls}>
+                  <TouchableOpacity
+                    style={styles.control}
+                    onPress={() => onChange(item.product.id, -1)}
+                  >
+                    <Text>−</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{item.quantity}</Text>
+                  <TouchableOpacity
+                    style={styles.control}
+                    onPress={() => onChange(item.product.id, 1)}
+                  >
+                    <Text>+</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ))}
+
+          <View style={styles.summary}>
+            <Text style={styles.totalLabel}>Итого</Text>
+            <Text style={styles.total}>
+              {total.toLocaleString('ru-RU')} ₸
+            </Text>
+            <TouchableOpacity style={styles.checkout} onPress={onCheckout}>
+              <Text style={styles.checkoutText}>Оформить заказ</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  title: {
+    color: COLORS.dark,
+    fontSize: 27,
+    fontWeight: 'bold',
+    marginTop: 15,
+  },
+  subtitle: {
+    color: COLORS.gray,
+    marginTop: 5,
+    marginBottom: 20,
+  },
+  empty: {
+    alignItems: 'center',
+    marginTop: 75,
+  },
+  emptyIcon: { fontSize: 55 },
+  emptyTitle: {
+    color: COLORS.dark,
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginTop: 15,
+  },
+  emptyText: {
+    color: COLORS.gray,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  item: {
+    backgroundColor: COLORS.white,
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  emoji: { fontSize: 40, marginRight: 15 },
+  itemInfo: { flex: 1 },
+  name: { color: COLORS.dark, fontSize: 16, fontWeight: 'bold' },
+  price: { color: COLORS.gold, marginTop: 5 },
+  controls: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  control: {
+    backgroundColor: COLORS.light,
+    width: 29,
+    height: 29,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quantity: { marginHorizontal: 14, color: COLORS.dark },
+  summary: {
+    backgroundColor: COLORS.white,
+    borderRadius: 18,
+    padding: 20,
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  totalLabel: { color: COLORS.gray },
+  total: {
+    color: COLORS.dark,
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: 7,
+  },
+  checkout: {
+    backgroundColor: COLORS.brown,
+    padding: 16,
+    borderRadius: 13,
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  checkoutText: { color: COLORS.white, fontWeight: 'bold' },
+});
+
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { COLORS } from '../theme';
+
+type Props = {
+  email: string;
+  onLogin: () => void;
+  onLogout: () => void;
+};
+
+export default function Profile({ email, onLogin, onLogout }: Props) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Мой профиль</Text>
+
+      <View style={styles.card}>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>♙</Text>
+        </View>
+
+        <Text style={styles.name}>
+          {email ? 'Добро пожаловать!' : 'Гость'}
+        </Text>
+        <Text style={styles.email}>
+          {email || 'Войдите в аккаунт'}
+        </Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={email ? onLogout : onLogin}
+        >
+          <Text style={styles.buttonText}>
+            {email ? 'Выйти из аккаунта' : 'Войти / Регистрация'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {['Мои заказы', 'Избранное', 'Адрес доставки', 'Настройки'].map(
+        (item, index) => (
+          <View style={styles.menu} key={item}>
+            <Text style={styles.menuText}>
+              {['📦', '♡', '📍', '⚙'][index]}   {item}
+            </Text>
+            <Text style={styles.arrow}>›</Text>
+          </View>
+        )
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  title: {
+    color: COLORS.dark,
+    fontSize: 27,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginBottom: 22,
+  },
+  card: {
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: COLORS.light,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: { fontSize: 40, color: COLORS.brown },
+  name: {
+    color: COLORS.dark,
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginTop: 14,
+  },
+  email: { color: COLORS.gray, marginTop: 6 },
+  button: {
+    backgroundColor: COLORS.brown,
+    borderRadius: 13,
+    padding: 15,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: { color: COLORS.white, fontWeight: 'bold' },
+  menu: {
+    backgroundColor: COLORS.white,
+    padding: 18,
+    borderRadius: 14,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  menuText: { color: COLORS.dark, fontSize: 14 },
+  arrow: { color: COLORS.gold, fontSize: 20 },
+});
+
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from 'react-native';
+
+type LoginProps = {
+  onBack: () => void;
+  onLogin: (email: string, password: string) => void;
+};
+
+const COLORS = {
+  background: '#F5EBE0',
+  card: '#FFF9F2',
+  brown: '#4A2C20',
+  dark: '#2C1D11',
+  beige: '#D4A373',
+  lightBrown: '#A98467',
+  text: '#35251C',
+  gray: '#8B8179',
+  white: '#FFFFFF',
+  border: '#E8D8C8',
+};
+
+export default function Login({ onBack, onLogin }: LoginProps) {
+  const [screen, setScreen] = useState<'login' | 'register' | 'forgot'>(
+    'login'
+  );
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const validateEmail = (value: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
+
+  const handleLogin = () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Ошибка', 'Заполните все поля.');
+      return;
+    }
+
+    if (!validateEmail(email.trim())) {
+      Alert.alert('Ошибка', 'Введите правильный email.');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert(
+        'Ошибка',
+        'Пароль должен содержать минимум 6 символов.'
+      );
+      return;
+    }
+
+    onLogin(email.trim(), password);
+  };
+
+  const handleRegister = () => {
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
+      Alert.alert('Ошибка', 'Заполните все поля.');
+      return;
+    }
+
+    if (!validateEmail(email.trim())) {
+      Alert.alert('Ошибка', 'Введите правильный email.');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert(
+        'Ошибка',
+        'Пароль должен содержать минимум 6 символов.'
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Ошибка', 'Пароли не совпадают.');
+      return;
+    }
+
+    Alert.alert(
+      'Регистрация успешна!',
+      'Ваш аккаунт создан.',
+      [
+        {
+          text: 'Продолжить',
+          onPress: () => onLogin(email.trim(), password),
+        },
+      ]
+    );
+  };
+
+  const handleForgot = () => {
+    if (!email.trim()) {
+      Alert.alert('Ошибка', 'Введите ваш email.');
+      return;
+    }
+
+    if (!validateEmail(email.trim())) {
+      Alert.alert('Ошибка', 'Введите правильный email.');
+      return;
+    }
+
+    Alert.alert(
+      'Готово!',
+      'Если аккаунт существует, инструкция по восстановлению будет отправлена на вашу почту.'
+    );
+
+    setScreen('login');
+  };
+
+  const renderInput = (
+    label: string,
+    placeholder: string,
+    value: string,
+    onChangeText: (value: string) => void,
+    options?: {
+      secure?: boolean;
+      toggle?: () => void;
+      visible?: boolean;
+      keyboardType?: 'default' | 'email-address';
+      autoCapitalize?: 'none' | 'words';
+    }
+  ) => (
+    <View style={styles.inputGroup}>
+      <Text style={styles.inputLabel}>{label}</Text>
+
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={COLORS.gray}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={options?.secure && !options?.visible}
+          keyboardType={options?.keyboardType || 'default'}
+          autoCapitalize={options?.autoCapitalize || 'none'}
+          autoCorrect={false}
+        />
+
+        {options?.toggle && (
+          <TouchableOpacity
+            onPress={options.toggle}
+            style={styles.eyeButton}
+          >
+            <Text style={styles.eyeText}>
+              {options.visible ? 'Скрыть' : 'Показать'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
+      <TouchableOpacity style={styles.backButton} onPress={onBack}>
+        <Text style={styles.backText}>← Назад</Text>
+      </TouchableOpacity>
+
+      <View style={styles.brand}>
+        <View style={styles.logoCircle}>
+          <Text style={styles.logoEmoji}>☕</Text>
+        </View>
+
+        <Text style={styles.logoTitle}>AROMA CRAFT</Text>
+        <Text style={styles.logoSubtitle}>COFFEE & DESSERTS</Text>
+      </View>
+
+      <View style={styles.card}>
+        {screen === 'login' && (
+          <>
+            <Text style={styles.title}>С возвращением!</Text>
+            <Text style={styles.subtitle}>
+              Войдите в свой аккаунт
+            </Text>
+
+            {renderInput(
+              'Электронная почта',
+              'example@gmail.com',
+              email,
+              setEmail,
+              {
+                keyboardType: 'email-address',
+              }
+            )}
+
+            {renderInput(
+              'Пароль',
+              'Введите пароль',
+              password,
+              setPassword,
+              {
+                secure: true,
+                visible: showPassword,
+                toggle: () => setShowPassword(!showPassword),
+              }
+            )}
+
+            <TouchableOpacity
+              style={styles.forgotButton}
+              onPress={() => setScreen('forgot')}
+            >
+              <Text style={styles.forgotText}>
+                Забыли пароль?
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.mainButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.mainButtonText}>Войти</Text>
+            </TouchableOpacity>
+
+            <View style={styles.switchRow}>
+              <Text style={styles.switchText}>
+                Нет аккаунта?
+              </Text>
+
+              <TouchableOpacity
+                onPress={() => setScreen('register')}
+              >
+                <Text style={styles.switchLink}>
+                  {' '}Зарегистрироваться
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
+        {screen === 'register' && (
+          <>
+            <Text style={styles.title}>Создать аккаунт</Text>
+            <Text style={styles.subtitle}>
+              Присоединяйтесь к AROMA CRAFT
+            </Text>
+
+            {renderInput(
+              'Ваше имя',
+              'Введите имя',
+              name,
+              setName,
+              {
+                autoCapitalize: 'words',
+              }
+            )}
+
+            {renderInput(
+              'Электронная почта',
+              'example@gmail.com',
+              email,
+              setEmail,
+              {
+                keyboardType: 'email-address',
+              }
+            )}
+
+            {renderInput(
+              'Пароль',
+              'Минимум 6 символов',
+              password,
+              setPassword,
+              {
+                secure: true,
+                visible: showPassword,
+                toggle: () => setShowPassword(!showPassword),
+              }
+            )}
+
+            {renderInput(
+              'Повторите пароль',
+              'Введите пароль ещё раз',
+              confirmPassword,
+              setConfirmPassword,
+              {
+                secure: true,
+                visible: showConfirmPassword,
+                toggle: () =>
+                  setShowConfirmPassword(!showConfirmPassword),
+              }
+            )}
+
+            <TouchableOpacity
+              style={styles.mainButton}
+              onPress={handleRegister}
+            >
+              <Text style={styles.mainButtonText}>
+                Зарегистрироваться
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.switchRow}>
+              <Text style={styles.switchText}>
+                Уже есть аккаунт?
+              </Text>
+
+              <TouchableOpacity
+                onPress={() => setScreen('login')}
+              >
+                <Text style={styles.switchLink}> Войти</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
+        {screen === 'forgot' && (
+          <>
+            <Text style={styles.title}>Восстановление пароля</Text>
+            <Text style={styles.subtitle}>
+              Укажите email, который использовали при регистрации.
+            </Text>
+
+            {renderInput(
+              'Электронная почта',
+              'example@gmail.com',
+              email,
+              setEmail,
+              {
+                keyboardType: 'email-address',
+              }
+            )}
+
+            <TouchableOpacity
+              style={styles.mainButton}
+              onPress={handleForgot}
+            >
+              <Text style={styles.mainButtonText}>
+                Восстановить пароль
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.returnButton}
+              onPress={() => setScreen('login')}
+            >
+              <Text style={styles.returnText}>
+                ← Вернуться ко входу
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+
+      <Text style={styles.footer}>
+        AROMA CRAFT © 2026
+      </Text>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: 15,
+  },
+  backText: {
+    color: COLORS.brown,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  brand: {
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 25,
+  },
+  logoCircle: {
+    width: 75,
+    height: 75,
+    borderRadius: 40,
+    backgroundColor: COLORS.dark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  logoEmoji: {
+    fontSize: 37,
+  },
+  logoTitle: {
+    color: COLORS.dark,
+    fontSize: 23,
+    fontWeight: '900',
+    letterSpacing: 3,
+  },
+  logoSubtitle: {
+    color: COLORS.lightBrown,
+    fontSize: 9,
+    letterSpacing: 3,
+    marginTop: 5,
+  },
+  card: {
+    backgroundColor: COLORS.card,
+    borderRadius: 23,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  title: {
+    color: COLORS.dark,
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  subtitle: {
+    color: COLORS.gray,
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 25,
+  },
+  inputGroup: {
+    marginBottom: 17,
+  },
+  inputLabel: {
+    color: COLORS.brown,
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    minHeight: 52,
+    backgroundColor: COLORS.background,
+    borderRadius: 13,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    minHeight: 50,
+    paddingHorizontal: 14,
+    color: COLORS.text,
+    fontSize: 14,
+  },
+  eyeButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  eyeText: {
+    color: COLORS.lightBrown,
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  forgotButton: {
+    alignSelf: 'flex-end',
+    marginTop: -5,
+    marginBottom: 20,
+  },
+  forgotText: {
+    color: COLORS.lightBrown,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  mainButton: {
+    backgroundColor: COLORS.brown,
+    height: 53,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+  },
+  mainButtonText: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    marginTop: 23,
+  },
+  switchText: {
+    color: COLORS.gray,
+    fontSize: 12,
+  },
+  switchLink: {
+    color: COLORS.brown,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  returnButton: {
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 10,
+  },
+  returnText: {
+    color: COLORS.brown,
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  footer: {
+    textAlign: 'center',
+    color: COLORS.lightBrown,
+    fontSize: 10,
+    letterSpacing: 2,
+    marginTop: 25,
+  },
+});
+
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { COLORS } from '../theme';
+
+const items = [
+  { name: 'Главная', icon: '⌂' },
+  { name: 'Каталог', icon: '☕' },
+  { name: 'Корзина', icon: '🛍' },
+  { name: 'Профиль', icon: '♙' },
+];
+
+type Props = {
+  activeTab: string;
+  onChange: (tab: string) => void;
+  cartCount: number;
+};
+
+export default function BottomNav({
+  activeTab,
+  onChange,
+  cartCount,
+}: Props) {
+  return (
+    <View style={styles.container}>
+      {items.map((item) => {
+        const active = activeTab === item.name;
+
+        return (
+          <TouchableOpacity
+            key={item.name}
+            style={styles.item}
+            onPress={() => onChange(item.name)}
+          >
+            <View>
+              <Text style={[styles.icon, active && styles.activeIcon]}>
+                {item.icon}
+              </Text>
+
+              {item.name === 'Корзина' && cartCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{cartCount}</Text>
+                </View>
+              )}
+            </View>
+
+            <Text style={[styles.label, active && styles.activeLabel]}>
+              {item.name}
+            </Text>
+
+            {active && <View style={styles.indicator} />}
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: 75,
+    backgroundColor: COLORS.white,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  item: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  icon: {
+    fontSize: 21,
+    color: COLORS.gray,
+  },
+  activeIcon: {
+    color: COLORS.brown,
+  },
+  label: {
+    color: COLORS.gray,
+    fontSize: 10,
+    marginTop: 4,
+  },
+  activeLabel: {
+    color: COLORS.brown,
+    fontWeight: 'bold',
+  },
+  indicator: {
+    position: 'absolute',
+    bottom: 0,
+    width: 25,
+    height: 3,
+    borderRadius: 3,
+    backgroundColor: COLORS.gold,
+  },
+  badge: {
+    position: 'absolute',
+    right: -9,
+    top: -5,
+    backgroundColor: COLORS.gold,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: COLORS.white,
+    fontSize: 9,
+    fontWeight: 'bold',
+  },
+});
+
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { COLORS } from '../theme';
+
+type Props = {
+  cartCount: number;
+  onCartPress: () => void;
+};
+
+export default function Header({ cartCount, onCartPress }: Props) {
+  return (
+    <View style={styles.header}>
+      <View>
+        <Text style={styles.logo}>AROMA CRAFT.</Text>
+        <Text style={styles.subtitle}>COFFEE HOUSE</Text>
+      </View>
+
+      <TouchableOpacity style={styles.cart} onPress={onCartPress}>
+        <Text style={styles.cartIcon}>♧</Text>
+        {cartCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{cartCount}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  header: {
+    height: 75,
+    paddingHorizontal: 22,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    color: COLORS.dark,
+    fontSize: 21,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
+  subtitle: {
+    color: COLORS.gold,
+    fontSize: 9,
+    letterSpacing: 4,
+    marginTop: 4,
+  },
+  cart: {
+    width: 45,
+    height: 45,
+    borderRadius: 15,
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartIcon: {
+    fontSize: 23,
+    color: COLORS.brown,
+  },
+  badge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: COLORS.gold,
+    borderRadius: 10,
+    minWidth: 19,
+    height: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: COLORS.white,
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+});
+
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import { CoffeeProduct } from '../data';
+import { COLORS, SHADOW } from '../theme';
+
+type Props = {
+  product: CoffeeProduct;
+  onPress: () => void;
+  onAdd: () => void;
+};
+
+export default function ProductCard({ product, onPress, onAdd }: Props) {
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPress}
+      activeOpacity={0.9}
+    >
+      <Image source={{ uri: product.image }} style={styles.image} />
+
+      <View style={styles.info}>
+        <Text style={styles.category}>{product.category}</Text>
+        <Text style={styles.name}>{product.name}</Text>
+        <Text style={styles.description} numberOfLines={1}>
+          {product.description}
+        </Text>
+
+        <View style={styles.bottom}>
+          <Text style={styles.price}>
+            {product.price.toLocaleString('ru-RU')} ₸
+          </Text>
+
+          <TouchableOpacity style={styles.addButton} onPress={onAdd}>
+            <Text style={styles.addText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    width: 220,
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginRight: 15,
+    ...SHADOW,
+  },
+  image: {
+    width: '100%',
+    height: 145,
+    backgroundColor: COLORS.light,
+  },
+  info: {
+    padding: 14,
+  },
+  category: {
+    color: COLORS.gold,
+    fontSize: 10,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  name: {
+    color: COLORS.dark,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 5,
+  },
+  description: {
+    color: COLORS.gray,
+    fontSize: 11,
+    marginTop: 5,
+  },
+  bottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 13,
+  },
+  price: {
+    color: COLORS.brown,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  addButton: {
+    backgroundColor: COLORS.brown,
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addText: {
+    color: COLORS.white,
+    fontSize: 23,
+    lineHeight: 26,
+  },
+});
+
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import { CoffeeProduct } from '../data';
+import { COLORS } from '../theme';
+
+type Props = {
+  product: CoffeeProduct;
+  onBack: () => void;
+  onAdd: () => void;
+};
+
+export default function Details({ product, onBack, onAdd }: Props) {
+  return (
+    <ScrollView style={styles.container}>
+      <TouchableOpacity onPress={onBack}>
+        <Text style={styles.back}>← Назад</Text>
+      </TouchableOpacity>
+
+      <Image source={{ uri: product.image }} style={styles.image} />
+
+      <Text style={styles.category}>{product.category}</Text>
+      <Text style={styles.name}>{product.name}</Text>
+      <Text style={styles.description}>{product.description}</Text>
+
+      <View style={styles.info}>
+        <Text style={styles.infoText}>Свежеприготовленный напиток</Text>
+        <Text style={styles.infoText}>Качество Premium</Text>
+      </View>
+
+      <View style={styles.bottom}>
+        <Text style={styles.price}>
+          {product.price.toLocaleString('ru-RU')} ₸
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={onAdd}>
+          <Text style={styles.buttonText}>Добавить в корзину</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  back: {
+    color: COLORS.brown,
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingVertical: 18,
+  },
+  image: {
+    width: '100%',
+    height: 290,
+    borderRadius: 22,
+    backgroundColor: COLORS.light,
+  },
+  category: {
+    color: COLORS.gold,
+    marginTop: 22,
+    fontSize: 12,
+    textTransform: 'uppercase',
+  },
+  name: {
+    color: COLORS.dark,
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  description: {
+    color: COLORS.gray,
+    fontSize: 14,
+    lineHeight: 23,
+    marginTop: 12,
+  },
+  info: {
+    backgroundColor: COLORS.white,
+    padding: 18,
+    borderRadius: 16,
+    marginTop: 22,
+  },
+  infoText: {
+    color: COLORS.brown,
+    marginVertical: 5,
+  },
+  bottom: {
+    marginTop: 25,
+    marginBottom: 30,
+  },
+  price: {
+    color: COLORS.dark,
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: COLORS.brown,
+    borderRadius: 14,
+    padding: 17,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+  },
+});
+
+export type CoffeeProduct = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+};
+
+export const products: CoffeeProduct[] = [
+  {
+    id: 1,
+    name: 'Капучино',
+    description: 'Эспрессо, молоко и нежная пенка',
+    price: 1200,
+    category: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=800',
+  },
+  {
+    id: 2,
+    name: 'Латте',
+    description: 'Нежный кофе с молоком',
+    price: 1400,
+    category: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800',
+  },
+  {
+    id: 3,
+    name: 'Американо',
+    description: 'Классический крепкий кофе',
+    price: 900,
+    category: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800',
+  },
+  {
+    id: 4,
+    name: 'Мокка',
+    description: 'Кофе с шоколадом',
+    price: 1600,
+    category: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1572286258217-215cf8c2c7f8?w=800',
+  },
+  {
+    id: 5,
+    name: 'Круассан',
+    description: 'Свежая французская выпечка',
+    price: 800,
+    category: 'Десерты',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800',
+  },
+  {
+    id: 6,
+    name: 'Чизкейк',
+    description: 'Нежный сливочный десерт',
+    price: 1500,
+    category: 'Десерты',
+    image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=800',
+  },
+  {
+    id: 7,
+    name: 'Айс Латте',
+    description: 'Холодный кофе со льдом',
+    price: 1500,
+    category: 'Холодный кофе',
+    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800',
+  },
+  {
+    id: 8,
+    name: 'Фраппе',
+    description: 'Освежающий холодный напиток',
+    price: 1700,
+    category: 'Холодный кофе',
+    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800',
+  },
+];

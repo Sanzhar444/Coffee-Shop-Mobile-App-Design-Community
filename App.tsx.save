@@ -1,0 +1,1777 @@
+    backgroundColor: '#FFFFFF',    borderRadius: 19,
+    pa
+  },
+  productImage: {
+    height: 115,
+    borderRadius: 14,
+    backgroundColor: '#F0E6DB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  productEmoji: {
+    fontSize: 57,
+  },
+  rating: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+  },
+  ratingText: {
+    color: '#8B6034',
+    fontSize: 9,
+    fontWeightlor: '#A69A8D',
+    fontSize: 10,
+    lineHeight: 15,
+    marginTop: 5,
+    minHeight: 30,
+  },
+  productBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  productPrice: {
+    color: '#493024',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  addButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 11,
+    backgroundColor: '#493024',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    color: '#FFFFFF',
+    fontSize: 23,
+    lineHeight: 27,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#8A7665',
+    marginVertical: 30,
+  },
+  bottomBar: {
+    height: 75,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F0E9E1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  tab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 65,
+  },
+  tabIcon: {
+    color: '#A69A8D',
+    fontSize: 23,
+    textAlign: 'center',
+  },
+  tabActive: {
+    color: '#493024',
+  },
+  tabText: {
+    color: '#A69A8D',
+    fontSize: 10,
+    marginTop: 3,
+  },
+  tabTextActive: {
+    color: '#493024',
+    fontWeight: '800',
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: -9,
+    top: -5,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#B87845',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  otherScreen: {
+    flex: 1,
+    minHeight: 550,
+    paddingTop: 20,
+  },
+  otherTitle: {
+    color: '#38251B',
+    fontSize: 25,
+    fontWeight: '800',
+    marginBottom: 25,
+  },
+  emptyCart: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+  emptyCartEmoji: {
+    fontSize: 60,
+  },
+  emptyCartTitle: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  emptyCartText: {
+    color: '#A69A8D',
+    fontSize: 13,
+    marginTop: 8,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 13,
+    marginBottom: 12,
+  },
+  cartEmoji: {
+    fontSize: 35,
+    marginRight: 14,
+  },
+  cartInfo: {
+    flex: 1,
+  },
+  cartName: {
+    color: '#38251B',
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  cartPrice: {
+    color: '#8A7665',
+    fontSize: 13,
+    marginTop: 5,
+  },
+  removeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#F3E9DF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeButtonText: {
+    color: '#493024',
+    fontSize: 22,
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    marginBottom: 18,
+  },
+  totalLabel: {
+    color: '#78695D',
+    fontSize: 16,
+  },
+  totalPrice: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  checkoutButton: {
+    backgroundColor: '#493024',
+    borderRadius: 14,
+    padding: 17,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  checkoutText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  profileCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 85,
+    height: 85,
+    borderRadius: 28,
+    backgroundColor: '#F0E6DB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileAvatarText: {
+    fontSize: 40,
+  },
+  profileName: {
+    color: '#38251B',
+    fontSize: 20,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  profileDescription: {
+    color: '#A69A8D',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});
+
+import React, { useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Pressable,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+
+type Coffee = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  emoji: string;
+};
+
+const coffees: Coffee[] = [
+  {
+    id: 1,
+    name: 'Капучино',
+    description: 'Эспрессо, молоко и нежная пенка',
+    price: 1200,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+  {
+    id: 2,
+    name: 'Латте',
+    description: 'Мягкий вкус и молочная текстура',
+    price: 1400,
+    category: 'Кофе',
+    emoji: '🥛',
+  },
+  {
+    id: 3,
+    name: 'Американо',
+    description: 'Крепкий кофе с горячей водой',
+    price: 1000,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+  {
+    id: 4,
+    name: 'Мокка',
+    description: 'Кофе, шоколад и молоко',
+    price: 1600,
+    category: 'Шоколад',
+    emoji: '🍫',
+  },
+  {
+    id: 5,
+    name: 'Айс-латте',
+    description: 'Освежающий холодный кофе',
+    price: 1500,
+    category: 'Холодный',
+    emoji: '🧋',
+  },
+  {
+    id: 6,
+    name: 'Эспрессо',
+    description: 'Насыщенный классический кофе',
+    price: 900,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+];
+
+const categories = ['Все', 'Кофе', 'Шоколад', 'Холодный'];
+
+export default function App() {
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [cart, setCart] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState('Главная');
+
+  const filteredCoffees = useMemo(() => {
+    return coffees.filter((coffee) => {
+      const matchesCategory =
+        selectedCategory === 'Все' ||
+        coffee.category === selectedCategory;
+
+      const matchesSearch = coffee.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [search, selectedCategory]);
+
+  const addToCart = (id: number) => {
+    setCart((previous) => [...previous, id]);
+  };
+
+  const totalPrice = cart.reduce((sum, id) => {
+    const coffee = coffees.find((item) => item.id === id);
+    return sum + (coffee?.price || 0);
+  }, 0);
+
+  const renderHome = () => (
+    <>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.locationLabel}>ВАШЕ МЕСТОПОЛОЖЕНИЕ</Text>
+          <Text style={styles.location}>Алматы, Казахстан ⌄</Text>
+        </View>
+
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>☕</Text>
+        </View>
+      </View>
+
+      <View style={styles.greeting}>
+        <Text style={styles.greetingSmall}>Добро пожаловать!</Text>
+        <Text style={styles.greetingTitle}>
+          Найдите свой идеальный кофе
+        </Text>
+      </View>
+
+      <View style={styles.searchBox}>
+        <Text style={styles.searchIcon}>⌕</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Поиск кофе..."
+          placeholderTextColor="#A69A8D"
+          value={search}
+          onChangeText={setSearch}
+        />
+      </View>
+
+      <View style={styles.banner}>
+        <View style={styles.bannerContent}>
+          <Text style={styles.bannerTag}>СПЕЦИАЛЬНОЕ ПРЕДЛОЖЕНИЕ</Text>
+          <Text style={styles.bannerTitle}>
+            Время для хорошего кофе
+          </Text>
+          <Text style={styles.bannerDescription}>
+            Получите скидку 20% на первый заказ
+          </Text>
+          <View style={styles.bannerButton}>
+            <Text style={styles.bannerButtonText}>WELCOME20</Text>
+          </View>
+        </View>
+
+        <Text style={styles.bannerCoffee}>☕</Text>
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Категории</Text>
+        <Text style={styles.sectionSubtitle}>Выберите напиток</Text>
+      </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.categories}
+      >
+        {categories.map((category) => (
+          <Pressable
+            key={category}
+            onPress={() => setSelectedCategory(category)}
+            style={[
+              styles.category,
+              selectedCategory === category && styles.categoryActive,
+            ]}
+          >
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === category &&
+                  styles.categoryTextActive,
+              ]}
+            >
+              {category}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Популярные напитки</Text>
+        <Text style={styles.sectionSubtitle}>
+          {filteredCoffees.length} напитков
+        </Text>
+      </View>
+
+      <View style={styles.productGrid}>
+        {filteredCoffees.map((coffee) => (
+          <View style={styles.productCard} key={coffee.id}>
+            <View style={styles.productImage}>
+              <Text style={styles.productEmoji}>{coffee.emoji}</Text>
+              <View style={styles.rating}>
+                <Text style={styles.ratingText}>★ 4.9</Text>
+              </View>
+            </View>
+
+            <Text style={styles.productName}>{coffee.name}</Text>
+            <Text style={styles.productDescription}>
+              {coffee.description}
+            </Text>
+
+            <View style={styles.productBottom}>
+              <Text style={styles.productPrice}>
+                {coffee.price.toLocaleString('ru-RU')} ₸
+              </Text>
+
+              <Pressable
+                style={styles.addButton}
+                onPress={() => addToCart(coffee.id)}
+              >
+                <Text style={styles.addButtonText}>+</Text>
+              </Pressable>
+            </View>
+          </View>
+        ))}
+      </View>
+
+      {filteredCoffees.length === 0 && (
+        <Text style={styles.emptyText}>
+          Ничего не найдено. Попробуйте другой запрос.
+        </Text>
+      )}
+    </>
+  );
+
+  const renderCart = () => {
+    const cartItems = cart.map((id, index) => ({
+      ...coffees.find((coffee) => coffee.id === id)!,
+      cartIndex: index,
+    }));
+
+    return (
+      <View style={styles.otherScreen}>
+        <Text style={styles.otherTitle}>Моя корзина</Text>
+
+        {cartItems.length === 0 ? (
+          <View style={styles.emptyCart}>
+            <Text style={styles.emptyCartEmoji}>🛍️</Text>
+            <Text style={styles.emptyCartTitle}>Корзина пуста</Text>
+            <Text style={styles.emptyCartText}>
+              Добавьте любимый кофе из каталога
+            </Text>
+          </View>
+        ) : (
+          <>
+            {cartItems.map((item) => (
+              <View style={styles.cartItem} key={item.cartIndex}>
+                <Text style={styles.cartEmoji}>{item.emoji}</Text>
+                <View style={styles.cartInfo}>
+                  <Text style={styles.cartName}>{item.name}</Text>
+                  <Text style={styles.cartPrice}>
+                    {item.price.toLocaleString('ru-RU')} ₸
+                  </Text>
+                </View>
+                <Pressable
+                  onPress={() =>
+                    setCart((previous) =>
+                      previous.filter((_, index) => index !== item.cartIndex)
+                    )
+                  }
+                  style={styles.removeButton}
+                >
+                  <Text style={styles.removeButtonText}>−</Text>
+                </Pressable>
+              </View>
+            ))}
+
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>Итого</Text>
+              <Text style={styles.totalPrice}>
+                {totalPrice.toLocaleString('ru-RU')} ₸
+              </Text>
+            </View>
+
+            <Pressable style={styles.checkoutButton}>
+              <Text style={styles.checkoutText}>Оформить заказ</Text>
+            </Pressable>
+          </>
+        )}
+      </View>
+    );
+  };
+
+  const renderProfile = () => (
+    <View style={styles.otherScreen}>
+      <Text style={styles.otherTitle}>Мой профиль</Text>
+      <View style={styles.profileCard}>
+        <View style={styles.profileAvatar}>
+          <Text style={styles.profileAvatarText}>👤</Text>
+        </View>
+        <Text style={styles.profileName}>Гость</Text>
+        <Text style={styles.profileDescription}>
+          Войдите в аккаунт, чтобы сохранять заказы
+        </Text>
+        <Pressable style={styles.checkoutButton}>
+          <Text style={styles.checkoutText}>Войти в аккаунт</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8F4EF" />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {activeTab === 'Главная' && renderHome()}
+        {activeTab === 'Корзина' && renderCart()}
+        {activeTab === 'Профиль' && renderProfile()}
+      </ScrollView>
+
+      <View style={styles.bottomBar}>
+        {[
+          { name: 'Главная', icon: '⌂' },
+          { name: 'Корзина', icon: '🛍' },
+          { name: 'Профиль', icon: '♙' },
+        ].map((tab) => (
+          <Pressable
+            key={tab.name}
+            style={styles.tab}
+            onPress={() => setActiveTab(tab.name)}
+          >
+            <View>
+              <Text
+                style={[
+                  styles.tabIcon,
+                  activeTab === tab.name && styles.tabActive,
+                ]}
+              >
+                {tab.icon}
+              </Text>
+              {tab.name === 'Корзина' && cart.length > 0 && (
+                <View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>{cart.length}</Text>
+                </View>
+              )}
+            </View>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === tab.name && styles.tabTextActive,
+              ]}
+            >
+              {tab.name}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F4EF',
+  },
+  scrollContent: {
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    paddingBottom: 25,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  locationLabel: {
+    color: '#A69A8D',
+    fontSize: 9,
+    letterSpacing: 1.5,
+    fontWeight: '700',
+  },
+  location: {
+    color: '#38251B',
+    fontSize: 14,
+    fontWeight: '700',
+    marginTop: 5,
+  },
+  avatar: {
+    width: 43,
+    height: 43,
+    borderRadius: 15,
+    backgroundColor: '#E9DCCB',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 23,
+  },
+  greeting: {
+    marginTop: 28,
+    marginBottom: 20,
+  },
+  greetingSmall: {
+    color: '#967D68',
+    fontSize: 14,
+  },
+  greetingTitle: {
+    color: '#38251B',
+    fontSize: 27,
+    fontWeight: '800',
+    lineHeight: 34,
+    marginTop: 5,
+    maxWidth: 280,
+  },
+  searchBox: {
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 23,
+  },
+  searchIcon: {
+    color: '#8A7665',
+    fontSize: 27,
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    color: '#38251B',
+    fontSize: 14,
+  },
+  banner: {
+    minHeight: 165,
+    backgroundColor: '#493024',
+    borderRadius: 22,
+    padding: 19,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    alignItems: 'center',
+    marginBottom: 27,
+  },
+  bannerContent: {
+    flex: 1,
+    zIndex: 1,
+  },
+  bannerTag: {
+    color: '#D9B995',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  bannerTitle: {
+    color: '#FFF8EF',
+    fontSize: 21,
+    fontWeight: '800',
+    marginTop: 10,
+    maxWidth: 205,
+  },
+  bannerDescription: {
+    color: '#D8C8B8',
+    fontSize: 11,
+    marginTop: 7,
+  },
+  bannerButton: {
+    backgroundColor: '#D9B995',
+    paddingHorizontal: 13,
+    paddingVertical: 8,
+    borderRadius: 9,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+  },
+  bannerButtonText: {
+    color: '#493024',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  bannerCoffee: {
+    fontSize: 70,
+    marginLeft: -8,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    color: '#38251B',
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  sectionSubtitle: {
+    color: '#A69A8D',
+    fontSize: 11,
+  },
+  categories: {
+    gap: 10,
+    paddingBottom: 26,
+  },
+  category: {
+    paddingHorizontal: 19,
+    paddingVertical: 11,
+    borderRadius: 13,
+    backgroundColor: '#FFFFFF',
+  },
+  categoryActive: {
+    backgroundColor: '#493024',
+  },
+  categoryText: {
+    color: '#78695D',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  categoryTextActive: {
+    color: '#FFFFFF',
+  },
+  productGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 15,
+  },
+  productCard: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 19,
+    padding: 10,
+  },
+  productImage: {
+    height: 115,
+    borderRadius: 14,
+    backgroundColor: '#F0E6DB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  productEmoji: {
+    fontSize: 57,
+  },
+  rating: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+  },
+  ratingText: {
+    color: '#8B6034',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  productName: {
+    color: '#38251B',
+    fontSize: 15,
+    fontWeight: '800',
+    marginTop: 12,
+  },
+  productDescription: {
+    color: '#A69A8D',
+    fontSize: 10,
+    lineHeight: 15,
+    marginTop: 5,
+    minHeight: 30,
+  },
+  productBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  productPrice: {
+    color: '#493024',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  addButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 11,
+    backgroundColor: '#493024',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    color: '#FFFFFF',
+    fontSize: 23,
+    lineHeight: 27,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#8A7665',
+    marginVertical: 30,
+  },
+  bottomBar: {
+    height: 75,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F0E9E1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  tab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 65,
+  },
+  tabIcon: {
+    color: '#A69A8D',
+    fontSize: 23,
+    textAlign: 'center',
+  },
+  tabActive: {
+    color: '#493024',
+  },
+  tabText: {
+    color: '#A69A8D',
+    fontSize: 10,
+    marginTop: 3,
+  },
+  tabTextActive: {
+    color: '#493024',
+    fontWeight: '800',
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: -9,
+    top: -5,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#B87845',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  otherScreen: {
+    flex: 1,
+    minHeight: 550,
+    paddingTop: 20,
+  },
+  otherTitle: {
+    color: '#38251B',
+    fontSize: 25,
+    fontWeight: '800',
+    marginBottom: 25,
+  },
+  emptyCart: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+  emptyCartEmoji: {
+    fontSize: 60,
+  },
+  emptyCartTitle: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  emptyCartText: {
+    color: '#A69A8D',
+    fontSize: 13,
+    marginTop: 8,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 13,
+    marginBottom: 12,
+  },
+  cartEmoji: {
+    fontSize: 35,
+    marginRight: 14,
+  },
+  cartInfo: {
+    flex: 1,
+  },
+  cartName: {
+    color: '#38251B',
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  cartPrice: {
+    color: '#8A7665',
+    fontSize: 13,
+    marginTop: 5,
+  },
+  removeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#F3E9DF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeButtonText: {
+    color: '#493024',
+    fontSize: 22,
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    marginBottom: 18,
+  },
+  totalLabel: {
+    color: '#78695D',
+    fontSize: 16,
+  },
+  totalPrice: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  checkoutButton: {
+    backgroundColor: '#493024',
+    borderRadius: 14,
+    padding: 17,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  checkoutText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  profileCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 85,
+    height: 85,
+    borderRadius: 28,
+    backgroundColor: '#F0E6DB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileAvatarText: {
+    fontSize: 40,
+  },
+  profileName: {
+    color: '#38251B',
+    fontSize: 20,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  profileDescription: {
+    color: '#A69A8D',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});
+
+
+import React, { useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Pressable,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
+
+type Coffee = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  emoji: string;
+};
+
+const coffees: Coffee[] = [
+  {
+    id: 1,
+    name: 'Капучино',
+    description: 'Эспрессо, молоко и нежная пенка',
+    price: 1200,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+  {
+    id: 2,
+    name: 'Латте',
+    description: 'Мягкий вкус и молочная текстура',
+    price: 1400,
+    category: 'Кофе',
+    emoji: '🥛',
+  },
+  {
+    id: 3,
+    name: 'Американо',
+    description: 'Крепкий кофе с горячей водой',
+    price: 1000,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+  {
+    id: 4,
+    name: 'Мокка',
+    description: 'Кофе, шоколад и молоко',
+    price: 1600,
+    category: 'Шоколад',
+    emoji: '🍫',
+  },
+  {
+    id: 5,
+    name: 'Айс-латте',
+    description: 'Освежающий холодный кофе',
+    price: 1500,
+    category: 'Холодный',
+    emoji: '🧋',
+  },
+  {
+    id: 6,
+    name: 'Эспрессо',
+    description: 'Насыщенный классический кофе',
+    price: 900,
+    category: 'Кофе',
+    emoji: '☕',
+  },
+];
+
+const categories = ['Все', 'Кофе', 'Шоколад', 'Холодный'];
+
+export default function App() {
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [cart, setCart] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState('Главная');
+
+  const filteredCoffees = useMemo(() => {
+    return coffees.filter((coffee) => {
+      const matchesCategory =
+        selectedCategory === 'Все' ||
+        coffee.category === selectedCategory;
+
+      const matchesSearch = coffee.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [search, selectedCategory]);
+
+  const addToCart = (id: number) => {
+    setCart((previous) => [...previous, id]);
+  };
+
+  const totalPrice = cart.reduce((sum, id) => {
+    const coffee = coffees.find((item) => item.id === id);
+    return sum + (coffee?.price || 0);
+  }, 0);
+
+  const renderHome = () => (
+    <>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.locationLabel}>ВАШЕ МЕСТОПОЛОЖЕНИЕ</Text>
+          <Text style={styles.location}>Алматы, Казахстан ⌄</Text>
+        </View>
+
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>☕</Text>
+        </View>
+      </View>
+
+      <View style={styles.greeting}>
+        <Text style={styles.greetingSmall}>Добро пожаловать!</Text>
+        <Text style={styles.greetingTitle}>
+          Найдите свой идеальный кофе
+        </Text>
+      </View>
+
+      <View style={styles.searchBox}>
+        <Text style={styles.searchIcon}>⌕</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Поиск кофе..."
+          placeholderTextColor="#A69A8D"
+          value={search}
+          onChangeText={setSearch}
+        />
+      </View>
+
+      <View style={styles.banner}>
+        <View style={styles.bannerContent}>
+          <Text style={styles.bannerTag}>СПЕЦИАЛЬНОЕ ПРЕДЛОЖЕНИЕ</Text>
+          <Text style={styles.bannerTitle}>
+            Время для хорошего кофе
+          </Text>
+          <Text style={styles.bannerDescription}>
+            Получите скидку 20% на первый заказ
+          </Text>
+          <View style={styles.bannerButton}>
+            <Text style={styles.bannerButtonText}>WELCOME20</Text>
+          </View>
+        </View>
+
+        <Text style={styles.bannerCoffee}>☕</Text>
+      </View>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Категории</Text>
+        <Text style={styles.sectionSubtitle}>Выберите напиток</Text>
+      </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.categories}
+      >
+        {categories.map((category) => (
+          <Pressable
+            key={category}
+            onPress={() => setSelectedCategory(category)}
+            style={[
+              styles.category,
+              selectedCategory === category && styles.categoryActive,
+            ]}
+          >
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === category &&
+                  styles.categoryTextActive,
+              ]}
+            >
+              {category}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Популярные напитки</Text>
+        <Text style={styles.sectionSubtitle}>
+          {filteredCoffees.length} напитков
+        </Text>
+      </View>
+
+      <View style={styles.productGrid}>
+        {filteredCoffees.map((coffee) => (
+          <View style={styles.productCard} key={coffee.id}>
+            <View style={styles.productImage}>
+              <Text style={styles.productEmoji}>{coffee.emoji}</Text>
+              <View style={styles.rating}>
+                <Text style={styles.ratingText}>★ 4.9</Text>
+              </View>
+            </View>
+
+            <Text style={styles.productName}>{coffee.name}</Text>
+            <Text style={styles.productDescription}>
+              {coffee.description}
+            </Text>
+
+            <View style={styles.productBottom}>
+              <Text style={styles.productPrice}>
+                {coffee.price.toLocaleString('ru-RU')} ₸
+              </Text>
+
+              <Pressable
+                style={styles.addButton}
+                onPress={() => addToCart(coffee.id)}
+              >
+                <Text style={styles.addButtonText}>+</Text>
+              </Pressable>
+            </View>
+          </View>
+        ))}
+      </View>
+
+      {filteredCoffees.length === 0 && (
+        <Text style={styles.emptyText}>
+          Ничего не найдено. Попробуйте другой запрос.
+        </Text>
+      )}
+    </>
+  );
+
+  const renderCart = () => {
+    const cartItems = cart.map((id, index) => ({
+      ...coffees.find((coffee) => coffee.id === id)!,
+      cartIndex: index,
+    }));
+
+    return (
+      <View style={styles.otherScreen}>
+        <Text style={styles.otherTitle}>Моя корзина</Text>
+
+        {cartItems.length === 0 ? (
+          <View style={styles.emptyCart}>
+            <Text style={styles.emptyCartEmoji}>🛍️</Text>
+            <Text style={styles.emptyCartTitle}>Корзина пуста</Text>
+            <Text style={styles.emptyCartText}>
+              Добавьте любимый кофе из каталога
+            </Text>
+          </View>
+        ) : (
+          <>
+            {cartItems.map((item) => (
+              <View style={styles.cartItem} key={item.cartIndex}>
+                <Text style={styles.cartEmoji}>{item.emoji}</Text>
+                <View style={styles.cartInfo}>
+                  <Text style={styles.cartName}>{item.name}</Text>
+                  <Text style={styles.cartPrice}>
+                    {item.price.toLocaleString('ru-RU')} ₸
+                  </Text>
+                </View>
+                <Pressable
+                  onPress={() =>
+                    setCart((previous) =>
+                      previous.filter((_, index) => index !== item.cartIndex)
+                    )
+                  }
+                  style={styles.removeButton}
+                >
+                  <Text style={styles.removeButtonText}>−</Text>
+                </Pressable>
+              </View>
+            ))}
+
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>Итого</Text>
+              <Text style={styles.totalPrice}>
+                {totalPrice.toLocaleString('ru-RU')} ₸
+              </Text>
+            </View>
+
+            <Pressable style={styles.checkoutButton}>
+              <Text style={styles.checkoutText}>Оформить заказ</Text>
+            </Pressable>
+          </>
+        )}
+      </View>
+    );
+  };
+
+  const renderProfile = () => (
+    <View style={styles.otherScreen}>
+      <Text style={styles.otherTitle}>Мой профиль</Text>
+      <View style={styles.profileCard}>
+        <View style={styles.profileAvatar}>
+          <Text style={styles.profileAvatarText}>👤</Text>
+        </View>
+        <Text style={styles.profileName}>Гость</Text>
+        <Text style={styles.profileDescription}>
+          Войдите в аккаунт, чтобы сохранять заказы
+        </Text>
+        <Pressable style={styles.checkoutButton}>
+          <Text style={styles.checkoutText}>Войти в аккаунт</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8F4EF" />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {activeTab === 'Главная' && renderHome()}
+        {activeTab === 'Корзина' && renderCart()}
+        {activeTab === 'Профиль' && renderProfile()}
+      </ScrollView>
+
+      <View style={styles.bottomBar}>
+        {[
+          { name: 'Главная', icon: '⌂' },
+          { name: 'Корзина', icon: '🛍' },
+          { name: 'Профиль', icon: '♙' },
+        ].map((tab) => (
+          <Pressable
+            key={tab.name}
+            style={styles.tab}
+            onPress={() => setActiveTab(tab.name)}
+          >
+            <View>
+              <Text
+                style={[
+                  styles.tabIcon,
+                  activeTab === tab.name && styles.tabActive,
+                ]}
+              >
+                {tab.icon}
+              </Text>
+              {tab.name === 'Корзина' && cart.length > 0 && (
+                <View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>{cart.length}</Text>
+                </View>
+              )}
+            </View>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === tab.name && styles.tabTextActive,
+              ]}
+            >
+              {tab.name}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F4EF',
+  },
+  scrollContent: {
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    paddingBottom: 25,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  locationLabel: {
+    color: '#A69A8D',
+    fontSize: 9,
+    letterSpacing: 1.5,
+    fontWeight: '700',
+  },
+  location: {
+    color: '#38251B',
+    fontSize: 14,
+    fontWeight: '700',
+    marginTop: 5,
+  },
+  avatar: {
+    width: 43,
+    height: 43,
+    borderRadius: 15,
+    backgroundColor: '#E9DCCB',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 23,
+  },
+  greeting: {
+    marginTop: 28,
+    marginBottom: 20,
+  },
+  greetingSmall: {
+    color: '#967D68',
+    fontSize: 14,
+  },
+  greetingTitle: {
+    color: '#38251B',
+    fontSize: 27,
+    fontWeight: '800',
+    lineHeight: 34,
+    marginTop: 5,
+    maxWidth: 280,
+  },
+  searchBox: {
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 23,
+  },
+  searchIcon: {
+    color: '#8A7665',
+    fontSize: 27,
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    color: '#38251B',
+    fontSize: 14,
+  },
+  banner: {
+    minHeight: 165,
+    backgroundColor: '#493024',
+    borderRadius: 22,
+    padding: 19,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    alignItems: 'center',
+    marginBottom: 27,
+  },
+  bannerContent: {
+    flex: 1,
+    zIndex: 1,
+  },
+  bannerTag: {
+    color: '#D9B995',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  bannerTitle: {
+    color: '#FFF8EF',
+    fontSize: 21,
+    fontWeight: '800',
+    marginTop: 10,
+    maxWidth: 205,
+  },
+  bannerDescription: {
+    color: '#D8C8B8',
+    fontSize: 11,
+    marginTop: 7,
+  },
+  bannerButton: {
+    backgroundColor: '#D9B995',
+    paddingHorizontal: 13,
+    paddingVertical: 8,
+    borderRadius: 9,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+  },
+  bannerButtonText: {
+    color: '#493024',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  bannerCoffee: {
+    fontSize: 70,
+    marginLeft: -8,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    color: '#38251B',
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  sectionSubtitle: {
+    color: '#A69A8D',
+    fontSize: 11,
+  },
+  categories: {
+    gap: 10,
+    paddingBottom: 26,
+  },
+  category: {
+    paddingHorizontal: 19,
+    paddingVertical: 11,
+    borderRadius: 13,
+    backgroundColor: '#FFFFFF',
+  },
+  categoryActive: {
+    backgroundColor: '#493024',
+  },
+  categoryText: {
+    color: '#78695D',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  categoryTextActive: {
+    color: '#FFFFFF',
+  },
+  productGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 15,
+  },
+  productCard: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 19,
+    padding: 10,
+  },
+  productImage: {
+    height: 115,
+    borderRadius: 14,
+    backgroundColor: '#F0E6DB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  productEmoji: {
+    fontSize: 57,
+  },
+  rating: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+  },
+  ratingText: {
+    color: '#8B6034',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  productName: {
+    color: '#38251B',
+    fontSize: 15,
+    fontWeight: '800',
+    marginTop: 12,
+  },
+  productDescription: {
+    color: '#A69A8D',
+    fontSize: 10,
+    lineHeight: 15,
+    marginTop: 5,
+    minHeight: 30,
+  },
+  productBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  productPrice: {
+    color: '#493024',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  addButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 11,
+    backgroundColor: '#493024',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    color: '#FFFFFF',
+    fontSize: 23,
+    lineHeight: 27,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#8A7665',
+    marginVertical: 30,
+  },
+  bottomBar: {
+    height: 75,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F0E9E1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  tab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 65,
+  },
+  tabIcon: {
+    color: '#A69A8D',
+    fontSize: 23,
+    textAlign: 'center',
+  },
+  tabActive: {
+    color: '#493024',
+  },
+  tabText: {
+    color: '#A69A8D',
+    fontSize: 10,
+    marginTop: 3,
+  },
+  tabTextActive: {
+    color: '#493024',
+    fontWeight: '800',
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: -9,
+    top: -5,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#B87845',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  otherScreen: {
+    flex: 1,
+    minHeight: 550,
+    paddingTop: 20,
+  },
+  otherTitle: {
+    color: '#38251B',
+    fontSize: 25,
+    fontWeight: '800',
+    marginBottom: 25,
+  },
+  emptyCart: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+  emptyCartEmoji: {
+    fontSize: 60,
+  },
+  emptyCartTitle: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  emptyCartText: {
+    color: '#A69A8D',
+    fontSize: 13,
+    marginTop: 8,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 13,
+    marginBottom: 12,
+  },
+  cartEmoji: {
+    fontSize: 35,
+    marginRight: 14,
+  },
+  cartInfo: {
+    flex: 1,
+  },
+  cartName: {
+    color: '#38251B',
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  cartPrice: {
+    color: '#8A7665',
+    fontSize: 13,
+    marginTop: 5,
+  },
+  removeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#F3E9DF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeButtonText: {
+    color: '#493024',
+    fontSize: 22,
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    marginBottom: 18,
+  },
+  totalLabel: {
+    color: '#78695D',
+    fontSize: 16,
+  },
+  totalPrice: {
+    color: '#38251B',
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  checkoutButton: {
+    backgroundColor: '#493024',
+    borderRadius: 14,
+    padding: 17,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  checkoutText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  profileCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 85,
+    height: 85,
+    borderRadius: 28,
+    backgroundColor: '#F0E6DB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileAvatarText: {
+    fontSize: 40,
+  },
+  profileName: {
+    color: '#38251B',
+    fontSize: 20,
+    fontWeight: '800',
+    marginTop: 15,
+  },
+  profileDescription: {
+    color: '#A69A8D',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});
